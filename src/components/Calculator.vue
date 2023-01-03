@@ -5,10 +5,19 @@
         <div class="form-group">
           <label for="result">Result</label>
           <input
+            v-if="operator && secondGivenNumber"
             type="number"
             class="form-control"
             id="result"
-            v-model="latestGivenNumber"
+            v-model="secondGivenNumber"
+          />
+
+          <input
+            v-else
+            type="number"
+            class="form-control"
+            id="result"
+            v-model="firstGivenNumber"
           />
         </div>
       </div>
@@ -91,48 +100,51 @@
 import { ref } from "vue";
 
 const firstGivenNumber = ref("");
-const latestGivenNumber = ref("0");
+const secondGivenNumber = ref("0");
 const operator = ref("");
 
 function clearAll() {
-  latestGivenNumber.value = "0";
+  firstGivenNumber.value = "";
+  secondGivenNumber.value = "0";
+  operator.value = "";
 }
 
 function concatInputVal(inputVal) {
-  if (latestGivenNumber.value === "0" || operator.value)
-    latestGivenNumber.value = "";
+  // Clear placeholder "0"
+  if (secondGivenNumber.value === "0") secondGivenNumber.value = "";
 
-  latestGivenNumber.value = latestGivenNumber.value.concat(inputVal);
+  // If operator already concat on latest number
+  if (operator.value)
+    secondGivenNumber.value = secondGivenNumber.value.concat(inputVal);
+  // Default: only on 1st number
+  else firstGivenNumber.value = firstGivenNumber.value.concat(inputVal);
 }
 
 function selectOperator(inputOperator) {
-  if (latestGivenNumber.value) firstGivenNumber.value = latestGivenNumber.value;
-  console.log(inputOperator);
+  if (secondGivenNumber.value) firstGivenNumber.value = secondGivenNumber.value;
   operator.value = inputOperator;
 }
 
 function checkResult() {
   const parsed1stNum = parseInt(firstGivenNumber.value);
-  console.log(parsed1stNum);
-  const parsed2ndNum = parseInt(latestGivenNumber.value);
-  console.log(parsed2ndNum);
+  const parsed2ndNum = parseInt(secondGivenNumber.value);
   const key = operator.value;
 
   switch (key) {
     case "/":
-      latestGivenNumber.value = parsed1stNum / parsed2ndNum;
+      secondGivenNumber.value = parsed1stNum / parsed2ndNum;
       break;
 
     case "x":
-      latestGivenNumber.value = parsed1stNum * parsed2ndNum;
+      secondGivenNumber.value = parsed1stNum * parsed2ndNum;
       break;
 
     case "-":
-      latestGivenNumber.value = parsed1stNum - parsed2ndNum;
+      secondGivenNumber.value = parsed1stNum - parsed2ndNum;
       break;
 
     case "+":
-      latestGivenNumber.value = parsed1stNum + parsed2ndNum;
+      secondGivenNumber.value = parsed1stNum + parsed2ndNum;
       break;
 
     default:
