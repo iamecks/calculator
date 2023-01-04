@@ -71,7 +71,7 @@
 
     <!-- Row #5 -->
     <div class="row gx-1 mt-1">
-      <div class="col mb-1" @click="updateDisplay('!')">
+      <div class="col mb-1" @click="negateDisplayValue">
         <div class="h6 p-3 mb-0 bg-secondary text-center rounded-1">+/-</div>
       </div>
       <div class="col" @click="updateDisplay('0')">
@@ -157,5 +157,10 @@ function deleteLatestDigit() {
 
   // If empty set to the default placeholder value
   if (state.displayValue === "") state.displayValue = "0";
+}
+
+function negateDisplayValue() {
+  const result = -parseFloat(state.displayValue);
+  state.displayValue = String(result);
 }
 </script>
