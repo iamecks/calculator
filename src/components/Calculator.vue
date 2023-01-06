@@ -88,7 +88,7 @@
 </template>
 
 <script setup>
-import { reactive } from "vue";
+import { reactive, watch } from "vue";
 
 const INITIAL_STATE = {
   displayValue: "0",
@@ -98,6 +98,15 @@ const INITIAL_STATE = {
 };
 
 let state = reactive({ ...INITIAL_STATE });
+
+// whenever state changes, this function will run
+watch(state, (newState) => {
+  // Count the occurence of dots
+  const dotCounts = newState.displayValue.split(".").length - 1;
+
+  // If count exceeds 1, meaning the latest entry is dot/period then run the side effect below
+  if (dotCounts > 1) deleteLatestDigit();
+});
 
 function updateDisplay(value) {
   if (state.waitingForSecondOperand) {
